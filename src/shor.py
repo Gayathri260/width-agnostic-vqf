@@ -121,7 +121,7 @@ def shor_factor(N:int, m:int=None, max_attempts:int=10, shots:int=1024) :
     handled, factor, reason = trivial_factor_check(N)
     if handled:
         return Result(
-                N, 'shor',
+                N, 'shor',None,
                 True, factor, None,
                 time.time()-t_total, None,
                 None, None, None,
@@ -153,21 +153,21 @@ def shor_factor(N:int, m:int=None, max_attempts:int=10, shots:int=1024) :
             if factors is not None:
                 transpiled_qc = transpile(qc, AerSimulator())
                 return Result (
-                        N, 'shor',
+                        N, 'shor',None,
                         True, factors, 1/attempt,
                         time.time()-t_total, time.time()-t_exec,
                         transpiled_qc.depth(), qc.num_qubits, sum(transpiled_qc.count_ops().values()),
                         a, r,
                         None, None,
                         None
-                    ), transpiled_qc
+                    ), transpiled_qc, qc
             #{"factors":factors,"method":"shor","attempt":attempt,"a":a,"order":r,'circuit':qc,"circuit_depth": qc.depth(),"qubit_count": qc.num_qubits,"circuit_depth_transpiled": transpile(qc, AerSimulator()).depth()}
     return Result(
-            N, 'shor',
+            N, 'shor',None,
             False, None, None,
             time.time()-t_total, time.time()-t_exec,
             None, None, None,
             None, None,
             None, None,
             None
-        ), None #{"factors":None, "method":"failed", "attempt":attempt}
+        ), None, None #{"factors":None, "method":"failed", "attempt":attempt}
