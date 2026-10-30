@@ -1,0 +1,68 @@
+[
+  {
+    "N": 35,
+    "method": "shor",
+    "success": true,
+    "factors": [
+      5,
+      7
+    ],
+    "success_prob": 1.0,
+    "runtime_total_sec": 27.46761131286621,
+    "runtime_exec_sec": 27.46761131286621,
+    "circuit_depth": 106197,
+    "qubit_count": 19,
+    "gate_count": 140601,
+    "a": 23,
+    "order_r": 4,
+    "E_opt": null,
+    "layers_s": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-10-28T15:49:24.032723"
+  },
+  {
+    "N": 51,
+    "method": "shor",
+    "success": true,
+    "factors": [
+      3,
+      17
+    ],
+    "success_prob": 1.0,
+    "runtime_total_sec": 2.2469117641448975,
+    "runtime_exec_sec": 2.2469117641448975,
+    "circuit_depth": 8172,
+    "qubit_count": 19,
+    "gate_count": 10935,
+    "a": 16,
+    "order_r": 2,
+    "E_opt": null,
+    "layers_s": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-10-28T15:49:26.318761"
+  },
+  {
+    "N": 77,
+    "method": "shor",
+    "success": true,
+    "factors": [
+      11,
+      7
+    ],
+    "success_prob": 0.5,
+    "runtime_total_sec": 862.5893762111664,
+    "runtime_exec_sec": 862.5893762111664,
+    "circuit_depth": 498713,
+    "qubit_count": 22,
+    "gate_count": 657458,
+    "a": 45,
+    "order_r": 2,
+    "E_opt": null,
+    "layers_s": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-10-28T16:03:50.714226"
+  }
+]
