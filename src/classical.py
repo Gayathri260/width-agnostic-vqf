@@ -9,7 +9,7 @@ def classical_factor(N:int)->dict :
         raise ValueError("N must be >= 2")
     if N%2==0:
         return Result(
-                N, 'classical',
+                N, 'classical', None,
                 True, (2,N//2), None,
                 time.time()-start, None,
                 None, None, None,
@@ -22,7 +22,7 @@ def classical_factor(N:int)->dict :
     while i*i <= N:
         if N%i == 0:
             return Result (
-                    N, 'classical',
+                    N, 'classical', None,
                     True, (i,N//i), None,
                     time.time()-start, None,
                     None, None, None,
@@ -32,7 +32,7 @@ def classical_factor(N:int)->dict :
                 ) #{"factors":(i, N//i), "method":"classical:trial_division"}
         i += 2
     return Result(
-            N, 'classical',
+            N, 'classical',None,
             True, (1,N), None,
             time.time()-start, None,
             None, None, None,

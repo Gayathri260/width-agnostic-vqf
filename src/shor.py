@@ -1,18 +1,23 @@
+import time
+import math
 import random
+import numpy as np
+from config import *
 from sympy import isprime
+from fractions import Fraction
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 from qiskit.circuit.library import QFTGate, UnitaryGate
 
 #====================== 1. Classical pre-check =========================
-def is_prime_power(n:int) -> [bool, int|None, int|None] :
+def is_prime_power(n:int):# -> [bool, int|None, int|None] :
     for k in range(2, int(np.log2(n)+1)):
         p = round(n**(1/k))
         if round(p)**k == n and isprime(p):
             return (True, p, k)
     return (False, None, None)
 
-def trivial_factor_check(n:int) -> [bool, [int, int]|None, str|None] :
+def trivial_factor_check(n:int):# -> [bool, [int, int]|None, str|None] :
     if n<2:
         raise ValueError("N must be >= 2")
     if n%2==0:
@@ -79,12 +84,12 @@ def run_circuit(qc:QuantumCircuit, shots:int = 1024)->dict[str,int] :
     return result.get_counts()
 
 # =================== 4. Shor - Classical post-processing ====================
-def phase_to_order(measured_value:int, m:int, N:int) -> int|None :
+def phase_to_order(measured_value:int, m:int, N:int):# -> int|None :
     phase = measured_value/(2**m)
     frac = Fraction(phase).limit_denominator(N)
     r = frac.denominator
     return r
-def order_to_factor(a:int, r:int, N:int) -> tuple[int]|None :
+def order_to_factor(a:int, r:int, N:int):# -> tuple[int]|None :
     '''
     r must be even
     a^(r/2) != -1 (mod N)  ==>  a^(r/2) != N-1
@@ -107,7 +112,7 @@ def order_to_factor(a:int, r:int, N:int) -> tuple[int]|None :
     return None
 
 # ================================ 5. Final Shor compiled in one function ==================================
-def shor_factor(N:int, m:int=None, max_attempts:int=10, shots:int=1024) :
+def shor_factor(N:int, cfg: ExperimentConfig, m:int=None, max_attempts:int=10) :
     '''
     N ->            integer to be factorised
     m ->            no. of QPE precision registers (default: no. of bits used to represent N in binary)
@@ -121,13 +126,13 @@ def shor_factor(N:int, m:int=None, max_attempts:int=10, shots:int=1024) :
     handled, factor, reason = trivial_factor_check(N)
     if handled:
         return Result(
-                N, 'shor',None,
-                True, factor, None,
+                N, 'shor-sim',None,
+                True, factor,
                 time.time()-t_total, None,
                 None, None, None,
                 None, None,
                 None, None,
-                None
+                None, None
             ), None #{"factors":factor, "method":reason, "attempt":0}
     if m is None:
         n = math.ceil(np.log2(N))
@@ -136,12 +141,15 @@ def shor_factor(N:int, m:int=None, max_attempts:int=10, shots:int=1024) :
     t_exec = time.time()
 
     for attempt in range(1, max_attempts+1):
+        print(f"  attempt {attempt}/{max_attempts}; picking a...", flush=True)
         a = pick_random_a(N)
-        while gcd(a, N) != 1:
+        while gcd(a, N) is not None:
             a = pick_random_a(N)
-
+        print(f"  a={a}; building circuit...", flush=True)
         qc = build_circuit(N, a, m)
-        counts = run_circuit(qc)
+        print("  circuit built, running...", flush=True)
+        counts = run_circuit(qc,shots=cfg.shots)
+        print("  counts received, processing...", flush=True)
         result = sorted(counts.items(), key=lambda kv: kv[1], reverse=True)
 
         for bitstring, freq in result:
@@ -153,21 +161,21 @@ def shor_factor(N:int, m:int=None, max_attempts:int=10, shots:int=1024) :
             if factors is not None:
                 transpiled_qc = transpile(qc, AerSimulator())
                 return Result (
-                        N, 'shor',None,
+                        N, 'shor',
                         True, factors, 1/attempt,
                         time.time()-t_total, time.time()-t_exec,
                         transpiled_qc.depth(), qc.num_qubits, sum(transpiled_qc.count_ops().values()),
                         a, r,
                         None, None,
-                        None
-                    ), transpiled_qc, qc
+                        None,None
+                    ), transpiled_qc, qc, None
             #{"factors":factors,"method":"shor","attempt":attempt,"a":a,"order":r,'circuit':qc,"circuit_depth": qc.depth(),"qubit_count": qc.num_qubits,"circuit_depth_transpiled": transpile(qc, AerSimulator()).depth()}
     return Result(
-            N, 'shor',None,
+            N, 'shor-sim',
             False, None, None,
             time.time()-t_total, time.time()-t_exec,
             None, None, None,
             None, None,
             None, None,
-            None
-        ), None, None #{"factors":None, "method":"failed", "attempt":attempt}
+            None, None
+        ), None, None, None #{"factors":None, "method":"failed", "attempt":attempt}

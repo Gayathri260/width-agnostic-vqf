@@ -1,5 +1,5 @@
 import sympy as sp
-
+from vqf_preprocessing import pmul
 def energy(clauses):
     """[Eq. 6] E = sum of squared clauses, binary-reduced. Returns {frozenset(vars): coeff}."""
     E = {}

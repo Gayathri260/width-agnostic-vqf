@@ -120,11 +120,11 @@ def factor_vqf_sim(N: int, cfg: ExperimentConfig):
               f"valid={P*Q==N and P>1 and Q>1}")
 
     return Result(
-        N, 'vqf-sim',None,
+        N, 'vqf-sim',
         best_factors is not None, best_factors, success_prob,
         time.time()-t_total, t_exec_total,
         transpiled_qc.depth(), n, sum(transpiled_qc.count_ops().values()),
-        None, None, None,
+        None, None,
         best_energy, cfg.s,
         None, None
-    ), transpiled_qc, qc, best_params
+    ), transpiled_qc, qaoa_circ, best_params

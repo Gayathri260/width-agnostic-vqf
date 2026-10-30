@@ -44,6 +44,7 @@ class Result:
 
     # Run context
     backend: Optional[str]
+    job_id:Optional[str] = None          # for hardware submissions
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
 
 def save_result(result: Result, filepath: str):
