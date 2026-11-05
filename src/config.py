@@ -13,6 +13,8 @@ class ExperimentConfig:
     mode: str = 'sim'            # 'sim' or 'hardware'
     backend_name: Optional[str] = None   # e.g. 'ibm_brisbane'; None = Aer
     optimization_level: int = 1
+    p:int=None #factor bit_length
+    q:int=None #factor bit_length
 
 @dataclass
 class Result:
@@ -41,6 +43,7 @@ class Result:
     # VQF-specific
     E_opt: Optional[float]
     layers_s: Optional[int]
+    bit_length:Optional[Tuple(int,int)] #factor bit-length p,q if inputted, else None
 
     # Run context
     backend: Optional[str]

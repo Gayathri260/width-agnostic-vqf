@@ -6,9 +6,16 @@ from scipy.optimize import minimize
 
 from config import ExperimentConfig, Result, save_result
 from vqf_preprocessing import preprocess
-from vqf_qubo import energy, reduce_to_quadratic, qubit_list, decode
+from vqf_qubo import energy, qubit_list, decode
 from vqf_hamiltonian import qubo_to_ising
 
+def interp_init(prev, p):
+    """Zhou et al., PRX 10, 021067, Eq. (B1): linearly interpolate the optimum at depth p
+    to a starting point at depth p+1. prev = [beta_0..beta_{p-1}, gamma_0..gamma_{p-1}]."""
+    def one(v):
+        v = np.concatenate(([0.0], v, [0.0]))
+        return [(i - 1) / p * v[i - 1] + (p - i + 1) / p * v[i] for i in range(1, p + 2)]
+    return np.array(one(prev[:p]) + one(prev[p:]))
 
 def factor_vqf_sim(N: int, cfg: ExperimentConfig):
     """
@@ -22,32 +29,31 @@ def factor_vqf_sim(N: int, cfg: ExperimentConfig):
     t_total = time.time()
 
     # --- Preprocessing ---
-    p, q, z, known, sub, clauses = preprocess(N)
+    p, q, z, known, sub, clauses = preprocess(N, cfg.p, cfg.q)
     E = energy(clauses)
-    E2 = reduce_to_quadratic(E)
-    qubits = qubit_list(E2, p, q, known, sub)
+    qubits = qubit_list(E, p, q, known, sub)
     n = len(qubits)
 
     print(f"N={N}: {n} qubits after preprocessing")
 
-    if n == 0:
+    if not E:
         P, Q = decode({}, p, q, known, sub)
         return Result(
-            N, 'vqf-preprocessing',None,
+            N, 'vqf-preprocessing',
             P*Q == N and P > 1 and Q > 1, (P, Q), None,
             time.time()-t_total, None,
             None, None, None,
             None, None,
-            None, None,
-            None
+            None, None,(cfg.p, cfg.q),
+            None, None
         ), None, None, None #Result(), transpiled circuit, circuit, best_params
 
     # --- Hamiltonian + Circuit ---
-    hamiltonian = qubo_to_ising(E2, qubits)
+    hamiltonian = qubo_to_ising(E, qubits)
     qaoa_circ = QAOAAnsatz(hamiltonian, reps=cfg.s, flatten=True)
     qaoa_circ.measure_all()
 
-    backend = AerSimulator(method='matrix_product_state')
+    backend = AerSimulator(method='statevector')
     pm = generate_preset_pass_manager(
         optimization_level=cfg.optimization_level,
         basis_gates=['cx', 'u', 'id', 'reset'],
@@ -59,18 +65,16 @@ def factor_vqf_sim(N: int, cfg: ExperimentConfig):
           f"gates={sum(transpiled_qc.count_ops().values())}")
 
     # --- COBYLA Optimization ---
-    t_exec = time.time()
-    best_params, best_energy = None, float('inf')
 
-    def objective(params):
-        bound = transpiled_qc.assign_parameters(params)
+    def objective(params, qc):
+        bound = qc.assign_parameters(params)
         counts = backend.run(bound, shots=cfg.shots).result().get_counts()
         total = sum(counts.values())
         exp_val = 0.0
         for bitstring, count in counts.items():
             bits = {v: int(bitstring[-(i+1)]) for i, v in enumerate(qubits)}
             e = 0.0
-            for mono, coeff in E2.items():
+            for mono, coeff in E.items():
                 term = 1
                 for var in mono:
                     term *= bits.get(var, 0)
@@ -78,15 +82,32 @@ def factor_vqf_sim(N: int, cfg: ExperimentConfig):
             exp_val += (count / total) * e
         return exp_val
 
-    for i in range(cfg.n_restarts):
-        rng = np.random.default_rng(i)
-        theta0 = rng.uniform(0, 2*np.pi, transpiled_qc.num_parameters)
-        opt = minimize(objective, theta0, method='COBYLA',
-                      options={'maxiter': cfg.maxiter_sim, 'rhobeg': 0.5})
-        print(f"  restart {i+1}/{cfg.n_restarts}: E={opt.fun:.4f}")
-        if opt.fun < best_energy:
-            best_energy = opt.fun
-            best_params = opt.x
+    def build(reps):
+        c = QAOAAnsatz(hamiltonian, reps=reps, flatten=True)
+        c.measure_all()
+        return pm.run(c)
+
+    t_exec = time.time()
+    best_params, best_energy = None, float('inf')
+
+    prev = None
+    for p_ in range(1, cfg.s + 1):
+        qc_p = build(p_)
+        if p_ == 1:                          # two parameters only: random multi-start
+            best = None
+            for i in range(cfg.n_restarts):
+                rng = np.random.default_rng(i)
+                r = minimize(objective, rng.uniform(0, 2 * np.pi, 2), args=(qc_p,), method='COBYLA',
+                             options={'maxiter': cfg.maxiter_sim, 'rhobeg': 0.5})
+                if best is None or r.fun < best.fun:
+                    best = r
+        else:                                # deeper layers start from the interpolated optimum
+            best = minimize(objective, interp_init(prev, p_ - 1), args=(qc_p,), method='COBYLA',
+                            options={'maxiter': cfg.maxiter_sim, 'rhobeg': 0.2})
+        prev = best.x
+        print(f"  p={p_}: E={best.fun:.4f}")
+    best_params, best_energy = prev, best.fun
+    transpiled_qc = qc_p
 
     t_exec_total = time.time() - t_exec
 
@@ -120,11 +141,11 @@ def factor_vqf_sim(N: int, cfg: ExperimentConfig):
               f"valid={P*Q==N and P>1 and Q>1}")
 
     return Result(
-        N, 'vqf-sim',
+        N, 'width-known-vqf-sim' if cfg.p else 'width-unknown-vqf-sim',
         best_factors is not None, best_factors, success_prob,
         time.time()-t_total, t_exec_total,
         transpiled_qc.depth(), n, sum(transpiled_qc.count_ops().values()),
         None, None,
-        best_energy, cfg.s,
+        best_energy, cfg.s, (cfg.p,cfg.q),
         None, None
     ), transpiled_qc, qaoa_circ, best_params

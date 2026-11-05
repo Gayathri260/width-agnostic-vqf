@@ -2,14 +2,17 @@ import json
 import os
 import numpy as np
 
-def save_cobyla_params(N, best_params, best_energy, filepath='results/cobyla_params.json'):
+def save_cobyla_params(N, best_params, best_energy, layers_s, filepath='results/cobyla_params.json'):
     """
     Save best COBYLA parameters found during simulation.
     These will be used as initial point for hardware runs.
     """
+    if best_params is None: return
     entry = {
         'N': N,
         'best_params': best_params.tolist(),
+        'layers_s': layers_s,
+        'order': 'beta[0..s-1] then gamma[0..s-1]',
         'best_energy': float(best_energy)
     }
     if os.path.exists(filepath):

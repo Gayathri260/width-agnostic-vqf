@@ -1,5 +1,5 @@
 import sympy as sp
-from math import ceil
+from math import ceil, isqrt
 import itertools
 
 
@@ -13,7 +13,7 @@ def build_clauses(m, n_p=None, n_q=None):
     Returns p bits, q bits, carry variables, and the list of clause expressions.
     """
     nm = m.bit_length()
-    n_p, n_q = n_p or nm, n_q or ceil(nm / 2)
+    n_p, n_q = n_p or (m // 3).bit_length(), n_q or isqrt(m).bit_length()
     n_c = max(n_p + n_q - 1, nm)     # = n_p+n_q-1 (paper); covers all bits of m if n_p, n_q are given
     p = [sp.Symbol(f"p{i}") for i in range(n_p)]
     q = [sp.Symbol(f"q{i}") for i in range(n_q)]
@@ -58,13 +58,12 @@ def pmul(a, b):
         out[k] = out.get(k, 0) + c1 * c2
     return {k: c for k, c in out.items() if c}
 
-def preprocess(m, n_p=None, n_q=None, substitute=False, nontrivial=False):
+def preprocess(m, n_p=None, n_q=None):
     """
     [Section II.2] Simplifies the clauses: carry truncation + the Eq. 5 rules, repeated
     until nothing changes.
     substitute=True : also applies x - y = 0 => y = x and x + y - 1 = 0 => y = 1 - x
                       (exact reformulation; replaces Eq. 5 rule 2).
-    nontrivial=True : also enforces p != 1 and q != 1 (removes the trivial factorisation).
     Returns p, q, z, known (var -> 0/1), sub (var -> (rep, flip): var = rep XOR flip),
     and the remaining clauses.
     """
@@ -107,17 +106,6 @@ def preprocess(m, n_p=None, n_q=None, substitute=False, nontrivial=False):
                 known[next(iter(zm))] = 0
             else:
                 zero.add(zm)
-        if nontrivial:                                            # p != 1 and q != 1
-            for bits in (p, q):
-                hi = bits[1:]
-                if any(known.get(v) == 1 for v in hi):
-                    continue
-                L = {sub.get(v, (v, False)) for v in hi if v not in known}
-                if not L:
-                    raise ValueError("only the trivial factorisation")
-                if len(L) == 1:
-                    (r, f), = L
-                    known[r] = 1 - int(f)                         # literal r XOR f must be 1
         clauses = [r for r in (reduce(cl) for cl in clauses) if r]
 
         for cl in clauses:
@@ -132,7 +120,7 @@ def preprocess(m, n_p=None, n_q=None, substitute=False, nontrivial=False):
             if not nz:
                 raise ValueError("inconsistent")
 
-            if substitute and len(nz) == 2 and all(len(k) == 1 for k in nz):
+            if len(nz) == 2 and all(len(k) == 1 for k in nz):
                 (k1, w1), (k2, w2) = nz.items()                   # x - y = 0  or  x + y - 1 = 0
                 if (w1 == -w2 and c0 == 0) or (w1 == w2 and c0 == -w1):
                     x, y = sorted((next(iter(k1)), next(iter(k2))), key=str)
@@ -142,7 +130,57 @@ def preprocess(m, n_p=None, n_q=None, substitute=False, nontrivial=False):
                         if r == y:
                             sub[v] = (x, f ^ flip)
                     break
-
+#added tryna incorporate rigorous preprocessing
+            if len(nz) == 3 and c0 == 0 and all(len(k) == 1 for k in nz):   # rule 3
+                ws = sorted(nz.values())
+                if ws in ([-2, 1, 1], [-1, -1, 2]):
+                    big = [k for k, w in nz.items() if abs(w) == 2][0]
+                    x, y = sorted((next(iter(k)) for k in nz if k != big), key=str)
+                    sub[y] = (x, False)
+                    for v, (r, f) in list(sub.items()):
+                        if r == y:
+                            sub[v] = (x, f)
+                    break
+            for v in {u for k in nz for u in k}:                                           # rules 5-6
+                for b in (0, 1):
+                    lo = hi = c0
+                    for k, c in nz.items():
+                        if v in k:
+                            if b == 0:
+                                continue
+                            k = k - {v}
+                        if not k:
+                            lo += c; hi += c
+                        elif c > 0:
+                            hi += c
+                        else:
+                            lo += c
+                    if lo > 0 or hi < 0:
+                        if v in known and known[v] == b:
+                            raise ValueError("inconsistent")
+                        known[v] = 1 - b
+            odd = {k: c for k, c in nz.items() if c % 2}                                   # rule 7
+            par = c0 % 2
+            if not odd:
+                if par:
+                    raise ValueError("inconsistent")
+            elif len(odd) == 1:
+                (k, _), = odd.items()
+                if par:
+                    for v in k:
+                        known[v] = 1
+                elif len(k) == 1:
+                    known[next(iter(k))] = 0
+                else:
+                    zero.add(k)
+            elif len(odd) == 2 and all(len(k) == 1 for k in odd):
+                x, y = sorted((next(iter(k)) for k in odd), key=str)
+                sub[y] = (x, bool(par))
+                for v, (r, f) in list(sub.items()):
+                    if r == y:
+                        sub[v] = (x, f ^ bool(par))
+                break
+#added tryna incorporate rigorous preprocessing (Hatware et al 2025)
             cs = list(nz.values())                                # Eq. (5) rules
             if all(c > 0 for c in cs) or all(c < 0 for c in cs):
                 s = 1 if cs[0] > 0 else -1

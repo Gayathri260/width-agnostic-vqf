@@ -1,56 +1,46 @@
 import sympy as sp
 from vqf_preprocessing import pmul
+from fractions import Fraction
+
+def clause_penalty(cl):
+    """
+    Penalty for one clause: 0 iff the clause equals 0, >= 1 otherwise.
+    Plain square (Eq. 6), or, for a product AB with coefficient +-1, the Schaller-Schutzhold
+    form: with clause = AB + S, penalty = ((2A + 2B - 1 + 4S)^2 - 1) / 8  [Sec. VI, Eq. 43].
+    The lowest (max degree, term count) form is kept.
+    """
+    best = pmul(cl, cl)
+    best_score = (max((len(k) for k in best), default=0), len(best))
+    for ab, c in cl.items():
+        if len(ab) != 2 or abs(c) != 1:
+            continue
+        A, B = sorted(ab, key=str)
+        T = {frozenset([A]): 2, frozenset([B]): 2, frozenset(): -1}       # 2A + 2B - 1 + 4S
+        for k, cc in cl.items():
+            if k != ab:
+                T[k] = T.get(k, 0) + 4 * c * cc
+        T = {k: v for k, v in T.items() if v}
+        sq = pmul(T, T)
+        sq[frozenset()] = sq.get(frozenset(), 0) - 1
+        cand = {k: Fraction(v, 8) for k, v in sq.items() if v}
+        score = (max((len(k) for k in cand), default=0), len(cand))
+        if score < best_score:
+            best, best_score = cand, score
+    return best
+
 def energy(clauses):
-    """[Eq. 6] E = sum of squared clauses, binary-reduced. Returns {frozenset(vars): coeff}."""
-    E = {}
+    """[Eq. 6] Sum of clause penalties; identical (or sign-flipped) clauses are counted once."""
+    E, seen = {}, set()
     for cl in clauses:
-        for k, c in pmul(cl, cl).items():
+        key = frozenset(cl.items())
+        neg = frozenset((k, -c) for k, c in cl.items())
+        if key in seen or neg in seen:
+            continue
+        seen.add(key)
+        for k, c in clause_penalty(cl).items():
             E[k] = E.get(k, 0) + c
     return {k: c for k, c in E.items() if c}
 
-def reduce_to_quadratic(E):
-    """
-    For any monomial with degree > 2, introduce auxiliary variable
-    w = x*y and add penalty 3w + xy - 2xw - 2yw
-    Repeat until all terms are degree <= 2
-    """
-    changed = True
-    while changed:
-        changed = False
-        new_E = {}
-        aux_penalties = {}
-
-        for mono, coeff in E.items():
-            if len(mono) <= 2:
-                new_E[mono] = new_E.get(mono, 0) + coeff
-            else:
-                # Pick first two vars to combine
-                vars_list = sorted(mono, key=str)
-                x, y = vars_list[0], vars_list[1]
-                rest = frozenset(vars_list[2:])
-
-                # Introduce w = x*y
-                w = sp.Symbol(f'w_{x}_{y}')
-                new_mono = frozenset([w]) | rest
-                new_E[new_mono] = new_E.get(new_mono, 0) + coeff
-
-                # Add penalty enforcing w = x*y (only once per pair)
-                key = frozenset([x, y])
-                if key not in aux_penalties:
-                    P = 4  # penalty strength > max coefficient
-                    aux_penalties[key] = w
-                    # penalty: P*(3w + xy - 2xw - 2yw)
-                    new_E[frozenset([w])] = new_E.get(frozenset([w]), 0) + 3*P
-                    new_E[frozenset([x,y])] = new_E.get(frozenset([x,y]), 0) + P
-                    new_E[frozenset([x,w])] = new_E.get(frozenset([x,w]), 0) - 2*P
-                    new_E[frozenset([y,w])] = new_E.get(frozenset([y,w]), 0) - 2*P
-
-                changed = True
-
-        if changed:
-            E = {k: v for k, v in new_E.items() if v != 0}
-
-    return E
 
 def qubit_list(E, p, q, known, sub):
     """
