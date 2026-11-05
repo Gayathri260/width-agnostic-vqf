@@ -1,0 +1,418 @@
+[
+  {
+    "N": 35,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      5,
+      7
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.04957985877990723,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:57:35.604254"
+  },
+  {
+    "N": 51,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      17,
+      3
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.013109207153320312,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:57:35.618237"
+  },
+  {
+    "N": 77,
+    "method": "width-unknown-vqf-sim",
+    "success": true,
+    "factors": [
+      11,
+      7
+    ],
+    "success_prob": 0.61181640625,
+    "runtime_total_sec": 1.4712157249450684,
+    "runtime_exec_sec": 0.6130249500274658,
+    "circuit_depth": 20,
+    "qubit_count": 3,
+    "gate_count": 31,
+    "a": null,
+    "order_r": null,
+    "E_opt": 0.4140625,
+    "layers_s": 2,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:57:37.090513"
+  },
+  {
+    "N": 143,
+    "method": "width-unknown-vqf-sim",
+    "success": true,
+    "factors": [
+      13,
+      11
+    ],
+    "success_prob": 0.035400390625,
+    "runtime_total_sec": 30.978221893310547,
+    "runtime_exec_sec": 30.89355707168579,
+    "circuit_depth": 532,
+    "qubit_count": 12,
+    "gate_count": 815,
+    "a": null,
+    "order_r": null,
+    "E_opt": 16.26513671875,
+    "layers_s": 2,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:58:08.071957"
+  },
+  {
+    "N": 551,
+    "method": "width-unknown-vqf-sim",
+    "success": true,
+    "factors": [
+      19,
+      29
+    ],
+    "success_prob": 0.003173828125,
+    "runtime_total_sec": 86.27491641044617,
+    "runtime_exec_sec": 85.61439824104309,
+    "circuit_depth": 1373,
+    "qubit_count": 20,
+    "gate_count": 2471,
+    "a": null,
+    "order_r": null,
+    "E_opt": 41.1181640625,
+    "layers_s": 2,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:59:34.354095"
+  },
+  {
+    "N": 35,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      5,
+      7
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.00347900390625,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:05:03.654373"
+  },
+  {
+    "N": 51,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      17,
+      3
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.002899646759033203,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:05:03.658580"
+  },
+  {
+    "N": 77,
+    "method": "width-unknown-vqf-sim",
+    "success": true,
+    "factors": [
+      11,
+      7
+    ],
+    "success_prob": 0.779296875,
+    "runtime_total_sec": 0.73213791847229,
+    "runtime_exec_sec": 0.7112038135528564,
+    "circuit_depth": 20,
+    "qubit_count": 3,
+    "gate_count": 31,
+    "a": null,
+    "order_r": null,
+    "E_opt": 0.27685546875,
+    "layers_s": 2,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:05:04.392492"
+  },
+  {
+    "N": 143,
+    "method": "width-unknown-vqf-sim",
+    "success": true,
+    "factors": [
+      11,
+      13
+    ],
+    "success_prob": 0.0263671875,
+    "runtime_total_sec": 28.955106019973755,
+    "runtime_exec_sec": 28.876795053482056,
+    "circuit_depth": 532,
+    "qubit_count": 12,
+    "gate_count": 815,
+    "a": null,
+    "order_r": null,
+    "E_opt": 16.348876953125,
+    "layers_s": 2,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:05:33.351559"
+  },
+  {
+    "N": 551,
+    "method": "width-unknown-vqf-sim",
+    "success": true,
+    "factors": [
+      19,
+      29
+    ],
+    "success_prob": 0.003662109375,
+    "runtime_total_sec": 83.87532424926758,
+    "runtime_exec_sec": 83.32686638832092,
+    "circuit_depth": 1373,
+    "qubit_count": 20,
+    "gate_count": 2471,
+    "a": null,
+    "order_r": null,
+    "E_opt": 42.177490234375,
+    "layers_s": 2,
+    "bit_length": [
+      null,
+      null
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:06:57.234328"
+  },
+  {
+    "N": 77,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      11,
+      7
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.007894515991210938,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      4,
+      3
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:07:24.870435"
+  },
+  {
+    "N": 143,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      13,
+      11
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.005563020706176758,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      4,
+      4
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:07:24.877818"
+  },
+  {
+    "N": 551,
+    "method": "width-known-vqf-sim",
+    "success": true,
+    "factors": [
+      29,
+      19
+    ],
+    "success_prob": 0.12939453125,
+    "runtime_total_sec": 17.459888458251953,
+    "runtime_exec_sec": 17.35764789581299,
+    "circuit_depth": 258,
+    "qubit_count": 12,
+    "gate_count": 465,
+    "a": null,
+    "order_r": null,
+    "E_opt": 35.6982421875,
+    "layers_s": 2,
+    "bit_length": [
+      5,
+      5
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:07:42.372057"
+  },
+  {
+    "N": 77,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      11,
+      7
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.005395174026489258,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      4,
+      3
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:23:04.593166"
+  },
+  {
+    "N": 143,
+    "method": "vqf-preprocessing",
+    "success": true,
+    "factors": [
+      13,
+      11
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 0.0038297176361083984,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": [
+      4,
+      4
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:23:04.598172"
+  },
+  {
+    "N": 551,
+    "method": "width-known-vqf-sim",
+    "success": true,
+    "factors": [
+      29,
+      19
+    ],
+    "success_prob": 0.134521484375,
+    "runtime_total_sec": 15.497551679611206,
+    "runtime_exec_sec": 15.44097089767456,
+    "circuit_depth": 258,
+    "qubit_count": 12,
+    "gate_count": 465,
+    "a": null,
+    "order_r": null,
+    "E_opt": 16.0234375,
+    "layers_s": 2,
+    "bit_length": [
+      5,
+      5
+    ],
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-06T00:23:20.097633"
+  }
+]

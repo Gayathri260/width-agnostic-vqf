@@ -1,0 +1,140 @@
+[
+  {
+    "N": 35,
+    "method": "classical",
+    "success": true,
+    "factors": [
+      5,
+      7
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 4.5299530029296875e-06,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:44:29.619118"
+  },
+  {
+    "N": 51,
+    "method": "classical",
+    "success": true,
+    "factors": [
+      3,
+      17
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 6.9141387939453125e-06,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:44:29.620532"
+  },
+  {
+    "N": 77,
+    "method": "classical",
+    "success": true,
+    "factors": [
+      7,
+      11
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 2.1457672119140625e-06,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:44:29.621776"
+  },
+  {
+    "N": 143,
+    "method": "classical",
+    "success": true,
+    "factors": [
+      11,
+      13
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 5.0067901611328125e-06,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:44:29.622261"
+  },
+  {
+    "N": 551,
+    "method": "classical",
+    "success": true,
+    "factors": [
+      19,
+      29
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 2.6226043701171875e-06,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:44:29.622710"
+  },
+  {
+    "N": 291311,
+    "method": "classical",
+    "success": true,
+    "factors": [
+      523,
+      557
+    ],
+    "success_prob": null,
+    "runtime_total_sec": 2.6702880859375e-05,
+    "runtime_exec_sec": null,
+    "circuit_depth": null,
+    "qubit_count": null,
+    "gate_count": null,
+    "a": null,
+    "order_r": null,
+    "E_opt": null,
+    "layers_s": null,
+    "bit_length": null,
+    "backend": null,
+    "job_id": null,
+    "timestamp": "2026-11-05T23:44:29.623144"
+  }
+]
