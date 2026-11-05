@@ -24,7 +24,7 @@ Current implementations of VQF assume the bit-lengths of the factors the N. This
 Note: This project was done solely with a research perspective and is only intended for academic research purposes.
 
 ```
-git clone https://github.com/Gayathri260/quantum-factoring-comparative-study
+git clone https://github.com/Gayathri260/width-agnostic-vqf
 cd quantum-factoring-comparative-study
 pip install -r requirements.txt
 jupyter notebook comparative_study.ipynb
