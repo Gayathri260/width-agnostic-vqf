@@ -25,7 +25,7 @@ Note: This project was done solely with a research perspective and is only inten
 
 ```
 git clone https://github.com/Gayathri260/width-agnostic-vqf
-cd quantum-factoring-comparative-study
+cd width-agnosti-vqf
 pip install -r requirements.txt
 jupyter notebook comparative_study.ipynb
 ```
