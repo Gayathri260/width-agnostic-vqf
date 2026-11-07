@@ -42,7 +42,7 @@ that decode to the correct factors. Values are means over 2 runs.
 ### Width-agnostic VQF
 
 | N | Qubits after preprocessing | Circuit depth | Gate count | Mean success | Best success |
-|---|---|---|---|---|---|
+|---:|:---:|:---:|:---:|:---:|:---:|
 | 35 | 0 (solved by preprocessing) | – | – | – | – |
 | 51 | 0 (solved by preprocessing) | – | – | – | – |
 | 77 | 3 | 20 | 31 | 0.6956 | 0.7793 |
@@ -61,12 +61,10 @@ that decode to the correct factors. Values are means over 2 runs.
 | 551 | 20 | 12 (depth 258, 465 gates, mean success 0.1320) |
 
 ### Observations
-- Small N works well: 35 and 51 are solved by preprocessing; 77 reaches 0.78 success with 3 qubits
-- The cost of realism is steep: qubits and depth grow quickly, and 291311 needs 61 qubits
-- At 2 layers, success probability falls from about 0.70 (77) to 0.03 (143) and 0.003 (551).
-- In the layer sweep, smaller instances improve with more layers. For larger instances, success
-  stays equally low at every depth.
-- Shor's circuit depth and qubit count grow much faster than VQF's (see `figures/circuit_metrics.png`). Trial division is fastest at every N tested (see `figures/runtime_comparison.png`).
+- 35 and 51: solved by preprocessing alone
+- 77: best success 0.78 with just 3 qubits
+- Removing the width assumption costs qubits (551 needs 20 vs 12) and success probability (0.0037 vs 0.1345 for 551)
+- 291311 needs 61 qubits → beyond feasible simulation
 
 ### Figures
 ![Success probability](figures/best_success_probability.png)
@@ -74,6 +72,13 @@ that decode to the correct factors. Values are means over 2 runs.
 ![Circuit metrics](figures/circuit_metrics.png)
 ![Layer sweep, Runtime Comparison](figures/layer_sweep_runtime_comparison.png)
 ![Layer sweep, Success Probability](figures/layer_sweep_best_success_probability.png)
+
+## Conclusion
+- Implemented a width-agnostic VQF in Qiskit that does not assume the factors’ bit-lengths, as with a real RSA public key
+- Small N works well: 35 and 51 are solved by preprocessing; 77 reaches 0.78 success with 3 qubits
+- The cost of realism is steep: qubits and depth grow quickly, and 291311 needs 61 qubits
+- Shor’s needs far deeper circuits; classical trial division remains the fastest
+- Quantum factoring still has a long way to go, algorithmically, to compete with classical methods
 
 ## References
 - Burges, Factoring as Optimization, (2002); https://www.microsoft.com/en-us/research/publication/factoring-as-optimization/
